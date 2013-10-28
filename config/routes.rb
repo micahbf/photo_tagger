@@ -14,5 +14,5 @@ NewAuthDemo::Application.routes.draw do
     end
   end
 
-  root :to => "users#show"
+  root :to => "static_pages#root"
 end

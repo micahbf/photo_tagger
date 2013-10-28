@@ -15,3 +15,4 @@ end
 gem 'bcrypt-ruby', :require => 'bcrypt'
 gem 'jquery-rails'
 gem 'pg'
+gem 'underscore-rails'

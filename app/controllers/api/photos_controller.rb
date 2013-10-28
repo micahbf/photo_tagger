@@ -10,7 +10,7 @@ class Api::PhotosController < ApplicationController
 
   def index
     @photos = User.find(params[:user_id]).photos
-    responds_to do |format|
+    respond_to do |format|
       format.html
       format.json { render json: @photos }
     end

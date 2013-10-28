@@ -12,4 +12,16 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require underscore
+//= require_tree ./models
+//= require_tree ./views
 //= require_tree .
+
+
+PT.initialize = function () {
+	PT.Photo.fetchByUserId(CURRENT_USER_ID, function () {
+		view = new PT.PhotosListView();
+		$photos_list = view.render().$el;
+		$("#content").append($photos_list);
+	})
+}
