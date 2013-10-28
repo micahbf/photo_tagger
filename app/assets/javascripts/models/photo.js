@@ -64,4 +64,9 @@
 			}
 		});
 	};
+
+	Photo.find = function(id){
+		return _.find(Photo.all, function(photo){return photo.get("id") === id});
+	}
+
 })(this);
