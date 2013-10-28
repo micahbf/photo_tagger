@@ -1,6 +1,7 @@
 class Api::PhotosController < ApplicationController
   def create
     @photo = Photo.new(params[:photo])
+    @photo.owner_id = current_user.id
     if @photo.save
       render :json => @photo
     else

@@ -5,7 +5,20 @@
 		this.attributes = _.extend({}, attributes);
 	};
 
-	Photo.all = []
+	Photo._events = {};
+
+	Photo.all = [];
+
+	Photo.on = function(eventName, callback) {
+		Photo._events[eventName] = Photo._events[eventName] || [];
+		Photo._events[eventName].push(callback);
+	};
+
+	Photo.trigger = function (eventName) {
+		Photo._events[eventName].forEach(function(callback) {
+			callback();
+		})
+	};
 
 	Photo.prototype.get = function(attr_name){
 		return this.attributes[attr_name];
@@ -25,11 +38,12 @@
 			type: "post",
 			url: "api/photos",
 			dataType: "json",
-			data: JSON.stringify(this.attributes),
+			data: { photo: this.attributes },
 			success: function(data, textStatus, jqXHR){
 				//that.set("id", data.id);
 				that.attributes = _.extend(that.attributes, data);
 				Photo.all.push(that);
+				Photo.trigger("add");
 				callback(that);
 			}
 		});
