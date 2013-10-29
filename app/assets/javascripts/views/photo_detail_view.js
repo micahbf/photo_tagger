@@ -11,6 +11,14 @@
 	PhotoDetailView.prototype.render = function(){
 		var renderedContent = JST["photo_detail"]({photo: this.photo});
 		this.$el.append(renderedContent);
+
+		var that = this;
+		PT.PhotoTagging.fetchByPhotoId(this.photo.get("id"), function(tags){
+			_.each(tags, function(tag){
+				that.$el.append(new PT.PhotoTagBoxView(tag).render().$el);
+			})
+		});
+
 		return this;
 	}
 
