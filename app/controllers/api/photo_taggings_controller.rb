@@ -18,7 +18,7 @@ class Api::PhotoTaggingsController < ApplicationController
   private
 
   def ensure_current_user_is_owner
-    owner_id = Photo.find(params[:photo_id]).owner_id
+    owner_id = Photo.find(params[:photo_tagging][:photo_id]).owner_id
     head 401 if (!current_user || current_user.id != owner_id)
   end
 end

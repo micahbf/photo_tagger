@@ -1,34 +1,36 @@
 (function (root) {
 	var PT = root.PT = (root.PT || {});
 
-	var Photo = PT.Photo = function(attributes){
+	var PhotoTagging = PT.PhotoTagging = function(attributes){
 		this.attributes = _.extend({}, attributes);
 	};
 
-	Photo._events = {};
+	PhotoTagging._events = {};
 
-	Photo.all = [];
+	PhotoTagging.all = [];
 
-	Photo.on = function(eventName, callback) {
-		Photo._events[eventName] = Photo._events[eventName] || [];
-		Photo._events[eventName].push(callback);
+	PhotoTagging.on = function(eventName, callback) {
+		PhotoTagging._events[eventName] = PhotoTagging._events[eventName] || [];
+		PhotoTagging._events[eventName].push(callback);
 	};
 
-	Photo.trigger = function (eventName) {
-		Photo._events[eventName].forEach(function(callback) {
-			callback();
-		})
+	PhotoTagging.trigger = function (eventName) {
+		if(PhotoTagging._events[eventName] !== undefined) {
+			PhotoTagging._events[eventName].forEach(function(callback) {
+				callback();
+			})
+		}
 	};
 
-	Photo.prototype.get = function(attr_name){
+	PhotoTagging.prototype.get = function(attr_name){
 		return this.attributes[attr_name];
 	};
 
-	Photo.prototype.set = function(attr_name, value){
+	PhotoTagging.prototype.set = function(attr_name, value){
 		this.attributes[attr_name] = value;
 	};
 
-	Photo.prototype.create = function(callback){
+	PhotoTagging.prototype.create = function(callback){
 		if(this.id){
 			callback(this);
 			return this;
@@ -36,37 +38,38 @@
 		var that = this;
 		$.ajax({
 			type: "post",
-			url: "api/photos",
+			url: "api/photo_taggings",
 			dataType: "json",
-			data: { photo: this.attributes },
+			data: { photo_tagging: this.attributes },
 			success: function(data, textStatus, jqXHR){
 				//that.set("id", data.id);
 				that.attributes = _.extend(that.attributes, data);
-				Photo.all.push(that);
-				Photo.trigger("add");
+				PhotoTagging.all.push(that);
+				PhotoTagging.trigger("add");
 				callback(that);
 			}
 		});
 	};
 
-	Photo.fetchByUserId = function(user_id, callback){
+	PhotoTagging.fetchByPhotoId = function(photo_id, callback){
 		$.ajax({
 			type: "get",
-			url: "api/users/" + user_id + "/photos",
+			url: "api/photos/" + photo_id + "/photo_taggings",
 			success: function(data, textStatus, jqXHR){
-				var photos = [];
+				var photo_taggings = [];
 				_.each(data, function(attrs){
-					var newPhoto = new Photo(attrs);
-					photos.push(newPhoto);
+					var newPhotoTagging = new PhotoTagging(attrs);
+					photo_taggings.push(newPhotoTagging);
 				});
-				Photo.all = photos;
-				callback(photos);
+				PhotoTagging.all = photo_taggings;
+				callback(photo_taggings);
 			}
 		});
 	};
 
-	Photo.find = function(id){
-		return _.find(Photo.all, function(photo){return photo.get("id") === id});
+	PhotoTagging.find = function(id){
+		return _.find(PhotoTagging.all, function(photo_tagging){
+			return photo_tagging.get("id") === id});
 	}
 
 })(this);
